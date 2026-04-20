@@ -147,15 +147,11 @@
   "Copy the hand-authored HTML pages and assets into docs/."
   (let ((docs (expand-file-name "docs" socratech-root)))
     (unless (file-directory-p docs) (make-directory docs t))
-    (dolist (f '("Socratech.html" "Socratech-blog.html"
-                 "Socratech-post.html" "Socratech-timeline.html"))
+    (dolist (f '("index.html" "blog.html"
+                 "post.html" "timeline.html"))
       (let ((src (expand-file-name f socratech-root)))
         (when (file-exists-p src)
           (copy-file src (expand-file-name f docs) t))))
-    ;; GitHub Pages serves index.html at the root by default.
-    (let ((home (expand-file-name "Socratech.html" socratech-root)))
-      (when (file-exists-p home)
-        (copy-file home (expand-file-name "index.html" docs) t)))
     (let ((src-assets (expand-file-name "assets" socratech-root))
           (dst-assets (expand-file-name "assets" docs)))
       (when (file-directory-p src-assets)
