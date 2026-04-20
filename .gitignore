@@ -1,0 +1,11 @@
+# generated site output
+docs/
+.cache/
+
+# emacs
+*~
+\#*\#
+.\#*
+
+# os
+.DS_Store

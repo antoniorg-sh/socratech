@@ -262,10 +262,9 @@
 
   .body-copy {
     font-family: var(--serif);
-    font-size: 28.5px;
+    font-size: 22px;
     line-height: 1.5;
     color: var(--ink);
-    max-width: 62ch;
   }
   .body-copy p + p { margin-top: 21px; }
   .body-copy em { font-style: italic; color: var(--ink-soft); }
@@ -431,7 +430,7 @@
   <!-- MASTHEAD -->
   <div class="masthead">
     <div class="left">
-      <span><b>SOCRATECH</b> · <span id="vol">Vol. III</span> · <span id="issue">№ 47</span></span>
+      <span><b>Antonio Ruvalcaba</b> · <span id="vol">Vol. III</span> · <span id="issue">№ 47</span></span>
     </div>
     <div class="center">
       a notebook of machines &amp; minds
@@ -449,7 +448,8 @@
       <span class="corner tl">— MANIFESTO</span>
       <span class="corner br">FOL. I · RECTO</span>
       <div>
-        <div class="hero-kicker"><span class="bar"></span>Antonio R · Computer Scientist · AI Infrastructure &amp; Distributed Systems · Mexico City</div>
+        <div class="hero-kicker"><span class="bar"></span>Computer Scientist</div>
+        <div class="hero-kicker"><span></span>AI Infrastructure</div>
         <h1 class="hero-title">on <em>machines</em><br>&amp; the minds<br>that <em>coax</em> them</h1>
         <div class="hero-subtitle">A working notebook. What I build, what I read, the quiet hours that make sense of them. From first principles.</div>
       </div>
@@ -479,7 +479,15 @@
       Colophon
     </aside>
     <div class="body-copy">
-      <p>Computer science enthusiast driven by a passion for understanding machine-human interaction. I explore AI, systems, cryptography, and the mathematics beneath them. This space is dedicated to showcasing my projects, progress, and documenting my learning journey. If you want to know more <a href="Socratech-timeline.html">click here...</a></p>
+      <p>There is a quiet work that happens before anything is said out loud.</p>
+      <p>Before the video, the essay, the post, before the finished thing exists at all, someone sits in a private room with a problem and takes it apart. Traces it to the root. Writes it down for themselves, slowly, until it stops looking clever and starts looking true. Most of what I want to do in the world happens in that room.</p>
+      <p>This site is the window into it.</p>
+      <p>I'm a computer scientist writing from Mexico City. I've always been fascinated by two things at once: human behavior, and the tools humans build. Of all the tools, the computer is my favorite. What keeps me coming back to it is the reciprocity: how we build with computers, and how they build us back.</p>
+      <p>The line from the assembler to the compiler to Unix is a line of tools, each one changing what it meant to program a computer. AI is the newest chapter in that lineage, and the one I want to sit with longest. I care about all of it: the building, the watching, the pros and cons, the way each piece of it actually gets shipped into the world.</p>
+      <p>The same instinct pulls me toward where the disciplines cross. A theorem from the eighteen-hundreds turns up inside a modern compiler. A question Leibniz was asking in the seventeenth century, whether reasoning itself could be reduced to calculation, is open again inside modern AI research. Mathematics and philosophy, in the end, are both about looking patiently at what is actually there.</p>
+      <p>My attention right now is on artificial intelligence, and on the older question it keeps pushing back into view: what a mind is, and what sort of life is worth building around one. What interests me is the craft: the careful, patient, hands-on work of understanding a system well enough to teach it.</p>
+      <p>What I'm trying to do, ultimately, is simple. Learn computer science, mathematics, and philosophy well. Teach what I learn so carefully that the explanation still works in ten years. As AI makes most technical writing disposable, that "still works in ten years" is the only bar worth caring about.</p>
+      <p>The rest is just the daily work. Study the foundations. Build things that work. Write down what I learn. Assemble a life that holds together. Enjoy, for its own sake, the work of figuring out how the world works.</p>
     </div>
   </section>
 
@@ -493,18 +501,18 @@
       <div class="now-grid">
         <div class="now-card">
           <div class="label">Reading</div>
-          <div class="headline">Mathematics for Machine Learning</div>
-          <div class="meta">Deisenroth, Faisal &amp; Ong. Linear algebra in earnest.</div>
+          <div class="headline">The AI canon, five papers at a time</div>
+          <div class="meta">attention, backprop, inference, retrieval, tool use. The short list an engineer should own cold.</div>
         </div>
         <div class="now-card">
           <div class="label">Building</div>
-          <div class="headline">Operand: infrastructure for AI agents</div>
-          <div class="meta">context orchestration and the plumbing between agents that actually ship — the unglamorous tier, where most of the work is</div>
+          <div class="headline">A Google Calendar MCP server, from scratch</div>
+          <div class="meta">stdio transport, JSON-RPC 2.0, no SDK. The protocol built small enough to hold in one head.</div>
         </div>
         <div class="now-card">
           <div class="label">Turning Over</div>
-          <div class="headline">What is worth knowing deeply when the machines can do the rest?</div>
-          <div class="meta">a long essay, in drafts</div>
+          <div class="headline">Whether a retrieval layer can genuinely learn from use, or only look like it does.</div>
+          <div class="meta">a lab note in drafts on the Hebbian memory experiment</div>
         </div>
       </div>
     </div>
@@ -516,26 +524,9 @@
       <span class="num">III.</span>
       Dispatches
     </aside>
-    <div>
-      <div class="post-row">
-        <span class="date">02 · MAR · 2026</span>
-        <span class="title"><a href="Socratech-blog.html">On coaxing machines</a></span>
-        <span class="tag">essay</span>
-      </div>
-      <div class="post-row">
-        <span class="date">18 · JAN · 2026</span>
-        <span class="title"><a href="Socratech-blog.html">A brief defense of segfaults</a></span>
-        <span class="tag">essay</span>
-      </div>
-      <div class="post-row">
-        <span class="date">05 · DEC · 2025</span>
-        <span class="title"><a href="Socratech-blog.html">WireGuard, from first principles</a></span>
-        <span class="tag">lab</span>
-      </div>
-      <div class="post-row">
-        <span class="date">22 · NOV · 2025</span>
-        <span class="title"><a href="Socratech-blog.html">The algorithmic invariant</a></span>
-        <span class="tag">notebook</span>
+    <div id="dispatches">
+      <div class="post-row" style="opacity:0.55">
+        <span class="title"><em>No dispatches yet. The Ledger is quiet.</em></span>
       </div>
     </div>
   </section>
@@ -550,7 +541,7 @@
       <div class="links-grid">
         <div class="link-item">
           <span class="k">GitHub</span>
-          <span class="v"><a href="https://github.com/socratech-sh" target="_blank">socratech-sh</a></span>
+          <span class="v"><a href="https://github.com/antoniorg-sh" target="_blank">antoniorg-sh</a></span>
           <span class="arrow">↗</span>
         </div>
         <div class="link-item">
@@ -559,8 +550,8 @@
           <span class="arrow">↗</span>
         </div>
         <div class="link-item">
-          <span class="k">Bluesky</span>
-          <span class="v"><a href="https://bsky.app/profile/socratech.sh" target="_blank">socratech.sh</a></span>
+          <span class="k">Telegram</span>
+          <span class="v"><a href="https://t.me/socratech73" target="_blank">socratech73</a></span>
           <span class="arrow">↗</span>
         </div>
         <div class="link-item">
@@ -940,6 +931,31 @@ document.getElementById('last-tended').textContent = `${months[now.getMonth()].t
 (function fillRule() {
   const el = document.getElementById('footer-rule');
   el.textContent = '· '.repeat(140);
+})();
+
+(function loadDispatches() {
+  const host = document.getElementById('dispatches');
+  if (!host) return;
+  const MONTH = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  fetch('posts.json')
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(posts => {
+      const picks = posts
+        .filter(p => p.featured)
+        .sort((a, b) => (a.date < b.date ? 1 : -1))
+        .slice(0, 3);
+      if (!picks.length) return;
+      host.innerHTML = picks.map(p => {
+        const d = new Date(p.date);
+        const stamp = `${String(d.getUTCDate()).padStart(2,'0')} · ${MONTH[d.getUTCMonth()]} · ${d.getUTCFullYear()}`;
+        return `<div class="post-row">
+          <span class="date">${stamp}</span>
+          <span class="title"><a href="posts/${p.id}.html">${p.title}</a></span>
+          <span class="tag">${p.category || ''}</span>
+        </div>`;
+      }).join('');
+    })
+    .catch(() => { /* keep the empty-state line as-is */ });
 })();
 </script>
 </body>

@@ -561,47 +561,8 @@
 </div>
 
 <script>
-// ─── DATA ─── the real post plus thoughtfully-seeded entries matching the voice
-const POSTS = [
-  { id: 'dsa',          title: 'Data structures and algorithms',          date: '2025-10-14', cat: 'notebook',   tags: ['algorithms','c++','patterns'], read: 14, fol: 'f.047r',
-    excerpt: 'A running study of two-pointer and sliding-window templates, with <em>commented C++</em> for sums, merges, and best-window problems. The notebook grows as problems do.' },
-  { id: 'coax',         title: 'On coaxing machines',                      date: '2026-03-02', cat: 'essay',      tags: ['philosophy','ai','craft'],     read: 9,  fol: 'f.052r',
-    excerpt: 'Programming is less a giving of orders than a careful <em>persuasion</em>. Notes toward a vocabulary for the quiet negotiation between intent and syntax.' },
-  { id: 'seg',          title: 'A brief defense of segfaults',             date: '2026-01-18', cat: 'essay',      tags: ['c','memory','debugging'],      read: 7,  fol: 'f.050r',
-    excerpt: 'The segmentation fault as pedagogy: what a <em>crash tells you</em> that a stack trace will not, and why I miss it in managed languages.' },
-  { id: 'wireguard',    title: 'WireGuard, from first principles',         date: '2025-12-05', cat: 'lab',        tags: ['networks','cryptography','kernel'], read: 22, fol: 'f.049r',
-    excerpt: 'From the NIC up. Virtual interfaces, Noise_IK, cryptokey routing, fwmark — an exposition meant to read <em>cold</em>. A teaching text, not a reference.' },
-  { id: 'invariant',    title: 'The algorithmic invariant',                date: '2025-11-22', cat: 'notebook',   tags: ['algorithms','data','interview'], read: 13, fol: 'f.048r',
-    excerpt: 'Data structures as <em>invariant enforcers</em>; algorithms as invariant-preserving transformations. The correctness lens the textbooks skirt and the interviewer silently expects.' },
-  { id: 'rust',         title: 'Three weeks with Rust (a measured review)', date: '2025-09-30', cat: 'review',     tags: ['rust','systems','opinion'],    read: 12, fol: 'f.046r',
-    excerpt: 'The borrow checker as teacher, not tyrant. On what carries over from C++ and what does not, written after <em>three honest weeks</em>.' },
-  { id: 'vim',          title: 'My .vimrc, annotated',                      date: '2025-08-11', cat: 'dispatch',   tags: ['tools','vim','workflow'],      read: 6,  fol: 'f.045r',
-    excerpt: 'Every line of my editor config, with a short note on <em>why</em>. A file I keep re-reading to remember what I once cared about.' },
-  { id: 'agents',       title: 'Small agents, short leashes',               date: '2025-07-02', cat: 'essay',      tags: ['ai','agents','systems'],       read: 10, fol: 'f.044r',
-    excerpt: 'Why I prefer agents that know <em>one thing</em> and ask permission over agents that plan for twenty minutes without checking in.' },
-  { id: 'cdmx',         title: 'Working from Mexico City, at a slow pace',  date: '2025-06-14', cat: 'dispatch',   tags: ['life','craft'],                read: 4,  fol: 'f.043r',
-    excerpt: 'On afternoons that <em>refuse</em> to be productive, cafés that tolerate laptops, and the particular gravity of a city that never quite holds still.' },
-  { id: 'heap',         title: 'A heap, explained to my younger self',      date: '2025-04-19', cat: 'notebook',   tags: ['algorithms','data','c++'],     read: 8,  fol: 'f.042r',
-    excerpt: 'Priority queues made plain, with the pictures I wish I\'d had. Written in the voice of someone who <em>just</em> figured it out, because I did.' },
-  { id: 'ipc',          title: 'Six IPC mechanisms, and when to reach for each', date: '2025-02-28', cat: 'lab',   tags: ['systems','linux','ipc'],       read: 16, fol: 'f.041r',
-    excerpt: 'Pipes, sockets, shm, signals, message queues, and mmap, compared on real workloads. <em>Not</em> a benchmark. A vocabulary.' },
-  { id: 'interp',       title: 'Writing a toy interpreter in an afternoon', date: '2024-12-08', cat: 'lab',        tags: ['languages','compilers','python'], read: 13, fol: 'f.038r',
-    excerpt: 'A calculator, then a calculator with variables, then a calculator with <em>functions</em>. How the gap from one to the next turns out to be shorter than it looks.' },
-  { id: 'network',      title: 'The networking concepts I keep forgetting', date: '2024-10-15', cat: 'notebook',   tags: ['networks','security'],         read: 5,  fol: 'f.036r',
-    excerpt: 'MSS vs MTU, ARP vs DNS, the order of a three-way handshake. A <em>cheat sheet</em> I wrote for myself and apparently for everyone.' },
-  { id: 'review2024',   title: 'A year in review: 2024',                    date: '2024-12-31', cat: 'dispatch',   tags: ['life','meta'],                 read: 6,  fol: 'f.039r',
-    excerpt: 'Books read, languages learned, problems solved. And the one <em>long project</em> that carried into the next year and refused to be finished.' },
-  { id: 'k8s',          title: 'Kubernetes is a database',                  date: '2024-08-22', cat: 'essay',      tags: ['systems','distributed','ops'], read: 11, fol: 'f.034r',
-    excerpt: 'Treating the control plane as a <em>reconciliation loop over etcd</em> changed how I debug clusters. A short argument for shifting your mental model.' },
-  { id: 'regex',        title: 'Why regex is both beautiful and wrong',     date: '2024-05-03', cat: 'essay',      tags: ['languages','theory'],          read: 7,  fol: 'f.031r',
-    excerpt: 'Finite automata are <em>lovely</em>. Production regex engines are not finite automata. That gap is where the dragons live.' },
-  { id: 'pair',         title: 'Pair programming with a language model',    date: '2024-03-11', cat: 'review',     tags: ['ai','tools','craft'],          read: 9,  fol: 'f.029r',
-    excerpt: 'A log of six months of paired work with Claude: what it writes well, what I <em>always</em> rewrite, and where the collaboration actually helps.' },
-  { id: 'sort',         title: 'On the aesthetics of quicksort',            date: '2023-11-16', cat: 'notebook',   tags: ['algorithms','c++'],            read: 8,  fol: 'f.024r',
-    excerpt: 'The partition step is a <em>small miracle</em> every time. Notes on why I still sketch it by hand before writing the code.' },
-  { id: 'ssh',          title: 'Your .ssh/config, reconsidered',            date: '2023-09-02', cat: 'dispatch',   tags: ['tools','networks','workflow'], read: 5,  fol: 'f.021r',
-    excerpt: 'ProxyJump, ControlMaster, and the ten-line config that <em>finally</em> made remote work feel local. A small file with outsized returns.' },
-];
+// ─── DATA ─── loaded from posts.json (generated by publish.el from posts/*.org)
+let POSTS = [];
 
 const CAT_LABELS = {
   essay:    'Essay',
@@ -697,7 +658,7 @@ function render() {
     row.addEventListener('click', e => {
       if (e.target.tagName === 'A') return;
       const id = row.dataset.id;
-      window.location.href = `Socratech-post.html?id=${id}`;
+      window.location.href = `posts/${id}.html`;
     });
   });
 }
@@ -713,10 +674,10 @@ function entryRow(p) {
     </div>
     <div class="title-col">
       <span class="cat">${CAT_LABELS[p.cat]||p.cat}</span>
-      <h3><a href="Socratech-post.html?id=${p.id}">${p.title}</a></h3>
+      <h3><a href="posts/${p.id}.html">${p.title}</a></h3>
       <div class="tags">${tagsHtml}</div>
     </div>
-    <div class="excerpt">${p.excerpt}</div>
+    <div class="excerpt">${p.dek}</div>
     <div class="right-col">
       <span class="read">${p.read} min</span>
       read →
@@ -737,13 +698,26 @@ document.querySelectorAll('.sortseg button').forEach(b => {
   });
 });
 
-// header stats
-document.getElementById('stat-total').innerHTML = POSTS.length + '<small>ENTRIES</small>';
-const yrs = POSTS.map(p => new Date(p.date).getFullYear());
-document.getElementById('stat-range').textContent = `${Math.min(...yrs)} · ${Math.max(...yrs)}`;
-
-buildTagRail();
-render();
+// load posts.json, then render; the JSON is produced by publish.el on each build
+fetch('posts.json')
+  .then(r => r.json())
+  .then(data => {
+    POSTS = data;
+    document.getElementById('stat-total').innerHTML = POSTS.length + '<small>ENTRIES</small>';
+    if (POSTS.length) {
+      const yrs = POSTS.map(p => new Date(p.date).getFullYear());
+      document.getElementById('stat-range').textContent = `${Math.min(...yrs)} · ${Math.max(...yrs)}`;
+    }
+    buildTagRail();
+    render();
+  })
+  .catch(err => {
+    document.getElementById('stat-total').innerHTML = '0<small>ENTRIES</small>';
+    document.getElementById('entries').innerHTML =
+      '<div class="no-results show"><span class="glyph">· could not load posts.json ·</span>' +
+      'Run <code>emacs --batch --load publish.el --funcall socratech-build</code> and try again.</div>';
+    console.error(err);
+  });
 
 // footer rule
 (function fillRule() {

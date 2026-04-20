@@ -1,0 +1,18 @@
+#+TITLE:     Working title with last word italicised as the accent
+#+DATE:      2026-04-19
+#+CATEGORY:  essay
+#+TAGS:      tag1 tag2 tag3
+#+READ_TIME: 8
+#+FOLIO:     f.053r
+#+DEK:       A one-sentence pull-quote, serif italic, shown under the title.
+#+FEATURED:  nil
+
+# File this as posts/<slug>.org. The filename (without .org) is the URL slug.
+# Delete this template file or keep it in place — publish.el excludes TEMPLATE.org by pattern.
+
+Your first paragraph becomes the lede (styled with a drop cap). Write it as
+one continuous sentence or two, not fragments.
+
+Subsequent paragraphs. Blank line separates them. Org-mode handles the rest.
+
+Use =emphasis= for /italics/ and *bold* sparingly.
