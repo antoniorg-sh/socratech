@@ -951,7 +951,7 @@ document.getElementById('last-tended').textContent = `${months[now.getMonth()].t
         return `<div class="post-row">
           <span class="date">${stamp}</span>
           <span class="title"><a href="posts/${p.id}.html">${p.title}</a></span>
-          <span class="tag">${p.category || ''}</span>
+          <span class="tag">${p.cat || ''}</span>
         </div>`;
       }).join('');
     })
