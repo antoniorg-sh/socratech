@@ -365,19 +365,19 @@
   <!-- MASTHEAD -->
   <div class="masthead">
     <div class="left">
-      <span><a href="Socratech.html"><b>SOCRATECH</b></a> · <span>Vol. III</span> · <span id="issue-num">№ 47</span></span>
+      <span><a href="index.html"><b>SOCRATECH</b></a> · <span>Vol. III</span> · <span id="issue-num">№ 47</span></span>
     </div>
     <div class="center">a notebook of machines &amp; minds</div>
     <div class="right">
-      <a href="Socratech.html">Home</a>
-      <a href="Socratech-blog.html">The Ledger</a>
-      <a href="Socratech-timeline.html">Timeline</a>
+      <a href="index.html">Home</a>
+      <a href="blog.html">The Ledger</a>
+      <a href="timeline.html">Timeline</a>
     </div>
   </div>
 
   <!-- FOLIO RAIL -->
   <div class="rail">
-    <a href="Socratech-blog.html" class="back">Back to the Ledger</a>
+    <a href="blog.html" class="back">Back to the Ledger</a>
     <span>FOL. <span id="folio">—</span></span>
   </div>
 
@@ -392,7 +392,7 @@
 </div>
 
 <script>
-/* ─── POSTS (kept in sync with Socratech-blog.html — one source of truth TODO) ─── */
+/* ─── POSTS (kept in sync with blog.html — one source of truth TODO) ─── */
 const POSTS = [
   { id: 'dsa',       title: 'Data structures and algorithms',            date: '2025-10-14', cat: 'notebook', tags: ['algorithms','c++','patterns'], read: 14, fol: 'f.047r',
     dek: 'A running study of two-pointer and sliding-window templates, in commented C++.' },
@@ -456,7 +456,7 @@ if (!post) {
       <span class="glyph">· entry not found ·</span>
       This folio is empty. The record you asked for is either not yet written or not yet indexed.
       <br><br>
-      <a href="Socratech-blog.html">Return to the Ledger</a>
+      <a href="blog.html">Return to the Ledger</a>
     </div>`;
 } else {
   renderPost(post);
@@ -526,7 +526,7 @@ function renderBody(p) {
     body.innerHTML = `
       <div class="in-drafts">
         <p>This piece is not yet finished. The argument is in outline, the paragraphs are in fragments, and the connective tissue between the two is what takes the longest.</p>
-        <p>Socratech publishes when a piece has earned its conclusion — not on a calendar. If you want to be told when this one is ready, the <a href="Socratech.html">home page</a> has the correspondence details.</p>
+        <p>Socratech publishes when a piece has earned its conclusion — not on a calendar. If you want to be told when this one is ready, the <a href="index.html">home page</a> has the correspondence details.</p>
         <p class="sig">— Socratech · ${p.fol}</p>
       </div>`;
   }
@@ -540,10 +540,10 @@ function renderRelated(p) {
   const next = sorted[i + 1];
   const html = [];
   html.push(prev
-    ? `<div class="card prev"><span class="k">← Earlier</span><a href="Socratech-post.html?id=${prev.id}"><span class="t">${prev.title}</span></a></div>`
+    ? `<div class="card prev"><span class="k">← Earlier</span><a href="post.html?id=${prev.id}"><span class="t">${prev.title}</span></a></div>`
     : `<div class="card prev"><span class="k">← Earlier</span><span class="t" style="color:var(--ink-muted);">origin of the record</span></div>`);
   html.push(next
-    ? `<div class="card next"><span class="k">Later →</span><a href="Socratech-post.html?id=${next.id}"><span class="t">${next.title}</span></a></div>`
+    ? `<div class="card next"><span class="k">Later →</span><a href="post.html?id=${next.id}"><span class="t">${next.title}</span></a></div>`
     : `<div class="card next"><span class="k">Later →</span><span class="t" style="color:var(--ink-muted);">the present tense</span></div>`);
   document.getElementById('related').innerHTML = html.join('');
 }
