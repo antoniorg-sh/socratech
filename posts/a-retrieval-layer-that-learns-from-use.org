@@ -1,0 +1,146 @@
+#+TITLE:     A retrieval layer that learns from use
+#+DATE:      2026-04-19
+#+CATEGORY:  lab
+#+TAGS:      ai memory retrieval hebbian
+#+READ_TIME: 11
+#+FOLIO:     f.002r
+#+DEK:       Standard RAG is a lookup into a frozen index. A Hebbian layer lets the weights between chunks shift as you use them, so the same question tomorrow pulls in a different neighborhood than today. A note on building one, and on what a memory actually is.
+#+FEATURED:  t
+
+Standard retrieval-augmented generation has a particular shape. You
+break a corpus into chunks, you embed each chunk, you store the
+embeddings in a vector index. A query arrives, you embed it, you
+pull the top-k nearest neighbors, you hand them to the model.
+Tomorrow the same query gives you the same chunks. The day after
+that, the same. The index does not learn. It is a frozen photograph
+of its corpus at the moment it was built.
+
+The brain, the thing the technology is named after, does not work
+this way.
+
+** A note from 1949
+
+Donald Hebb, in 1949, wrote down what would become the most famous
+sentence in neuroscience: when an axon of cell A is near enough to
+excite cell B and repeatedly takes part in firing it, some growth
+process occurs such that A's efficiency in firing B is increased.
+The usual translation is "cells that fire together wire together,"
+and while it loses the hedges, it keeps the load-bearing idea.
+Co-activation strengthens a connection. Over time, what the network
+fires in response to what depends on what it has fired together
+with.
+
+This is a rule you can drop into a retrieval system.
+
+** The cascade
+
+The version I have been building works in four steps. A query arrives
+and runs a TF-IDF pass first, which is fast and vocabulary-bounded
+and tells you what chunks share words with the question. Then a
+cosine similarity pass on local embeddings (Qwen3-Embedding-0.6B,
+running in LM Studio on my laptop), which tells you what chunks
+share meaning with the question even if the words differ. Then comes
+a Hebbian neighborhood pass, which does something the first two
+cannot: it looks at what chunks have been co-retrieved with this
+chunk before, and pulls them in too. Finally, a content relevance
+gate: if nothing scores high enough, the system returns nothing
+rather than fabricating connections.
+
+Each layer catches something the one before it misses. The words-
+layer catches exact matches. The meaning-layer catches paraphrases.
+The Hebbian layer catches the things that are related only because
+they have answered a question together before. The gate keeps the
+system honest when the corpus genuinely has nothing to say.
+
+** How the graph moves
+
+When retrieval returns a set of chunks, and the reader (a human, or
+a downstream model acting as judge) marks that answer useful, the
+edges between those chunks get strengthened. When the answer is
+judged bad, or when a chunk has not been part of a useful retrieval
+in a long time, its edges decay. This is the standard machinery of
+Hebbian learning (potentiation and decay) applied to the index
+rather than to a population of neurons.
+
+What you get, after a few hundred queries, is a graph that has
+quietly reorganized itself around the questions it has been asked.
+Chunks that kept proving useful together live close to each other in
+retrieval space, even when their raw embedding similarity would not
+have suggested it. Chunks that no one ever reaches for slowly fall
+out of the picture.
+
+The implementation is smaller than you would expect. A sparse
+matrix of edge weights keyed by chunk ID, a simple rule on every
+retrieval (bump the chunks that helped, decay the rest by a
+constant factor), a re-ranker on the read path that adds the
+accumulated co-activation score to the embedding score with a
+small coefficient. That is most of it. The rest is bookkeeping
+about what counted as a good answer.
+
+** Why this is interesting
+
+Two reasons, and they are both philosophical before they are
+technical.
+
+The first is that a frozen index is a strange artifact. It is the
+only part of a knowledge system that does not get better with use.
+The model gets better. The prompts get better. The product iterates.
+But the retrieval underneath stays the shape it had on day one.
+That asymmetry shows up in the output. Systems that do not learn
+from use feel the same tomorrow as they did today, and users
+eventually notice, even if they cannot name what they are noticing.
+
+The second is that notes, and knowledge, are not static objects.
+A library is not an archive. A library is a pattern of paths that
+get worn into the carpet by the people who walk them. Some books
+get picked up often; others gather dust. The books that come
+together in the same reader's afternoon end up in the same mental
+neighborhood, regardless of how the shelves are arranged. A
+retrieval layer that mirrors that behavior is closer to what a
+memory actually is. The closer the tool gets to how the brain
+actually treats the world, the less work the brain has to do to
+treat it.
+
+** What it is not
+
+It is not a replacement for the embedding layer. The embedder stays
+frozen. The Hebbian layer sits on top as a re-ranker that remembers
+what the query has been paired with before. This is the cheap
+part. No one has to fine-tune a model to get this; anyone with an
+embedding index and a small sparse graph can have it.
+
+It is also not magic. If the feedback signal is bad (a user who
+clicks thumbs-up on everything, a reader-model that judges its own
+answers uncritically, a noisy eval suite that rewards confident
+wrongness), the weights drift toward noise. The quality of the
+learning is the quality of the signal that drives it. This is the
+part that is harder than it looks, and the part I keep returning
+to.
+
+** Where this is going
+
+I use the word "brain" carefully, because everyone calls everything
+a brain now. What I mean is narrow. A Hebbian memory layer is an
+index that responds to being used. It is one ingredient in the
+larger kind of thing people have in mind when they say "agent with
+memory," and a small one. But it is the ingredient that closes the
+loop between what the system has seen and what the system will see
+next.
+
+The more interesting claim is that this loop, once closed,
+compounds. The more an agent uses the memory, the more specific the
+memory becomes to that agent. That is the same property that makes
+a person's notebook unlike anybody else's: the shape of what has
+been written down gets rearranged by the shape of what has been
+looked up. A Hebbian layer is one attempt to give a machine the
+same grace.
+
+The code that runs this lives at =~/hebbian-memory/=. I am still
+deciding what the right benchmark for it is. Precision at five is
+the obvious one; the harder question is whether the improvement
+from the Hebbian layer is large enough to be felt in use, or only
+large enough to be detected by a microbenchmark. The first is the
+only kind of improvement that matters. The second is the kind you
+can publish.
+
+I want both, eventually. For now I want the first.

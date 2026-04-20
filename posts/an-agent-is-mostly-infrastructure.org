@@ -1,0 +1,119 @@
+#+TITLE:     An agent is mostly infrastructure
+#+DATE:      2026-04-19
+#+CATEGORY:  essay
+#+TAGS:      mcp agents tools operand
+#+READ_TIME: 9
+#+FOLIO:     f.001r
+#+DEK:       An agent looks, from the outside, like a conversation with a model. From the inside it is mostly plumbing. This is a note on the part that is plumbing, and on what I am building to make it less tedious.
+#+FEATURED:  t
+
+An agent, on the outside, is a conversation with a model. You ask it
+to do something, it thinks aloud, it returns a result. This is the
+part that sells.
+
+Inside, an agent is mostly plumbing. The model calls tools. The tools
+run somewhere. Their outputs come back. The model decides what to do
+next. Some of those tools call other tools. Somewhere there is memory
+of what has happened so far. Most of the work of an agent, in the
+engineering sense, is the work of the plumbing that holds all of this
+together.
+
+This is the part I keep thinking about.
+
+** The shape of the current problem
+
+MCP, the Model Context Protocol, is a standard way for a tool to
+describe itself to a model, and for a model to call it. A Python tool
+ships with a Python server that speaks MCP. A Node tool ships with a
+Node server. A Go tool ships with a Go server. Each of those servers
+is a process with its own port, its own auth, its own deployment, its
+own scaling config.
+
+Fifty tools across an enterprise is, in effect, fifty small services,
+each needing its own care and feeding. That is a lot of ceremony for
+something whose user-facing surface is a few short function
+signatures.
+
+The awkwardness is structural. MCP speaks over stdio or HTTP between
+an agent and a tool server, and the server implementation is
+per-language. So the unit of deployment ends up being per-language,
+and everyone ends up running a matrix of servers. The servers are
+never the interesting part of the work. The tools are. The servers
+are tax.
+
+** What I am building
+
+MCP Compose is a single Go binary that spawns tools as child
+processes in any language and speaks MCP on their behalf. Python
+tools run as Python processes. Node tools run as Node processes. The
+orchestrator runs as one process. Communication between the
+orchestrator and its children happens over stdio pipes, not network
+sockets.
+
+The effects compound. Cold starts are milliseconds rather than
+seconds, because spawning a subprocess is cheaper than spinning up a
+container. Authentication becomes one layer rather than fifty.
+Scaling happens at the process level, which is a finer grain than the
+container level. For a developer with ten tools in three languages,
+the mental model collapses from "ten small services" to "one process
+tree."
+
+I keep returning to how different this is from how I learned backend
+engineering. The old instinct was to give every concern its own
+deployment. Each service was a sovereign citizen. Operand is the
+opposite instinct: one process at the root, and a colony of lightweight
+children under it, all speaking the same protocol outward.
+
+** Tools calling tools
+
+Once you have an orchestrator, a small but consequential thing becomes
+possible. A tool can call another tool internally, without round-
+tripping through the model. The model calls one tool; behind it, a
+chain executes automatically. The contracts between tools carry their
+own versioning, their own schema hashes, their own semver constraints.
+
+What this builds, if you squint, is a typed workflow engine for the
+agent era. Temporal and Airflow and Prefect do this for data
+pipelines, but none of them speaks MCP, and none is polyglot at the
+process level. The new thing here is that the unit is the tool, not
+the job, and the consumer is a model rather than a scheduler.
+
+** The philosophical bit
+
+I have been thinking, lately, about what a /tool/ actually is.
+
+In a REST world, a tool is an endpoint: a verb plus a path plus a
+payload. In a gRPC world, it is a method on a service. In an MCP
+world, it is a function the model can call. These are not the same
+thing. An MCP tool is a contract with a model as its counterparty.
+The model is going to read your function's description and decide,
+on the fly, whether to call it. The prose of the schema matters as
+much as the types.
+
+Which means writing good tools for agents is a new discipline. It is
+part API design, part technical writing, part behavioral engineering.
+The tools that end up useful are not the ones with the prettiest
+signatures; they are the ones the model actually reaches for,
+reliably, when asked to do something adjacent.
+
+This is the deepest reason I care about the infrastructure under
+agents. The way you write a tool shapes the agent that uses it. The
+way you host that tool shapes who can write it. The way you orchestrate
+tools shapes what an agent is capable of composing. Plumbing, in this
+sense, is not plumbing. It is the grammar of what a thinking machine
+can say.
+
+** What this is for
+
+The immediate reason I am building MCP Compose is that I want to
+deploy my own agents' tools without operating a small platform team.
+The longer reason is that I think the agent era is going to need an
+infrastructure layer, and the current one is held together by tape.
+
+There is a world in which MCP becomes the default way services expose
+themselves to anything, not just to agents. In that world, whatever
+orchestrates MCP tools at the process level is quietly load-bearing.
+I want to find out whether that world is the one we're in. If it is,
+I want the thing that runs under it to be pleasant to use.
+
+The terminal is open. Let's see what we can compile.
