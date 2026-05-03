@@ -1,0 +1,64 @@
+#+TITLE:     Three notebooks and a /memory/
+#+DATE:      2026-05-03
+#+CATEGORY:  essay
+#+TAGS:      ai cognition notes hebbian operand first-principles
+#+READ_TIME: 9
+#+FOLIO:     f.004r
+#+DEK:       On three notebooks, a digital archive, and the memory layer being built underneath. A working system for thinking with AI without letting AI do the thinking.
+#+FEATURED:  nil
+
+I have three notebooks. The smallest is blue, blank pages, soft cover, the kind that fits in a jacket pocket. I write in it whatever crosses my mind during a math problem. Wrong attempts at proofs. Shorthand for an idea I am chasing. Sums I need to check before I trust them. The pages get messy fast. I never reread them.
+
+The second is bigger and hardcover, also blank inside. My sister gave it to me years ago and I left it on a shelf for a long time, the way you leave good gifts when you are not sure you have earned them. This is the notebook where the work goes once it has settled. Theorems written out properly, in my own notation. Diagrams drawn with care. Margin notes from my future self to my present self. I treat the pages like a craftsman treats a workbench.
+
+The third is not paper. It is a directory on my computer called brain, organized as plain text files that link to each other, searchable, taggable, growing. When I have understood something well enough to explain it in three paragraphs without checking my notes, that is where it goes.
+
+The system did not start as a system. It started as a way to study mathematics without losing my mind, which is what happens to me when I try to hold complicated ideas in my head without writing them down. But over the past year it has become something larger than that. It is a working answer to a question that more people should be asking. Where does thinking actually live, now that machines can produce text that looks like it?
+
+The dominant story about artificial intelligence and knowledge work is that you should let the machine do the thinking. Read this and AI will summarize it for you. Outline this and AI will write it for you. Need to understand this and AI will explain it back. The pitch is always the same. You provide the prompt, the machine provides the output, you save time.
+
+The trouble with the story is that the time you save is the time you used to spend understanding. The summary you read is not the article you read. The outline AI wrote is not the outline your mind built. The explanation AI generated did not pass through the part of you that gets stronger by passing things through it. You have not learned. You have looked at something that resembles the thing you would have made if you had learned.
+
+This is not a new problem. The calculator did the same thing to mental arithmetic, and a generation grew up unable to estimate whether a number on a screen was reasonable. Autocorrect did it to spelling. AI is doing it faster and across more cognitive functions, including the ones that matter most. Reading. Writing. Thinking through a problem to its end.
+
+The framework I have been using for the past months works the other way around. It assumes that cognition is the part that has to stay yours. The machine is good for other things, things it actually does better. Storage. Retrieval. Searching across a substrate that is too large to hold in your head. But thinking, the actual act of working through an idea until you understand it, is the part you cannot delegate without losing the very capacity that makes you able to do anything interesting in the first place.
+
+Cognition is the human's job. The machine's job is substrate amplification.
+
+The three notebooks and the directory I described earlier are the surface of a four-layer system, and each layer is a different answer to the question of who does what.
+
+The blue notebook is where the actual cognitive work happens. Solving the problem. Trying the proof. Catching a thought before it escapes. The notebook is messy because thinking is messy, and the messiness has a function. Crossing things out is part of how you discover what you actually believe. The notebook is small because it should travel with you. It does not need an index, or a system, or a graduation review. Its job is to externalize the working part of your mind so that the working part can hold more at once. It is yours, only yours, and unfit for any other reader.
+
+The bigger notebook is where ideas go once they have earned a clean version. The test is simple. Can I reconstruct this proof, this argument, this derivation, without looking at the source? If yes, the idea is ready to be written down properly. If no, it is not yet mine. Forcing it to be mine before it is ready would only produce an entry I would later have to redo.
+
+When I write into this notebook I take time over it. The diagrams matter. The page composition matters. Leonardo da Vinci's notebooks are the example I keep returning to, not because of the mirror writing or the famous flying machines, but because of the way the pages are composed. A dominant figure off-center, smaller studies arranged around it, text wrapping the diagrams instead of explaining them. The page is a field of thought, not a sequence of paragraphs. I am not Leonardo, and I am unlikely ever to be. But the practice of treating a page like a field is available to anyone with a blank notebook and the patience not to fill it sequentially.
+
+There is a third test, which is whether I can teach the idea to someone who has not read the chapter. When I can do that, the idea is ready for the digital directory. Three to five paragraphs, written in plain language, cross-linked to other notes that touch the same concept. This is the artifact warehouse. This is where my thinking goes once it has been finished by me, into a form that is searchable and that can outlive any single notebook.
+
+Notice what just happened in that paragraph. The artifact warehouse is the first layer where artificial intelligence enters the workflow as a participant, not as a tool I picked up and put down. The brain directory is built and maintained with AI assistance. I sit with an agent and we structure the file together. The agent suggests cross-links to existing notes I have forgotten about. The agent helps me name things consistently across years of accumulation. The agent writes the index entries that point to the new file. None of this is cognition. All of it is the kind of careful, mechanical, structurally repetitive work that AI does well and that I do poorly when tired. The division of labor is honest. I have done the thinking. The machine helps me put the thinking somewhere where I will find it again.
+
+The fourth layer is the one I am building toward, and it changes what the system can do.
+
+The brain directory, for all its links and tags, is still a place I have to remember to look. I have to know what keyword to search. I have to remember that I wrote something on a topic before I can find what I wrote. The directory is a warehouse, not a memory, and a warehouse's value is bounded by my ability to know what I am looking for.
+
+A memory is different. A memory surfaces things to you. You think of one idea and three related ones rise into view that you had not consciously summoned. The retrieval is by relevance, not by name. The pattern is associative.
+
+The fourth layer is named Hebbian, after the rule in neuroscience that says neurons that fire together wire together. Hebbian started as a long conversation with my best friend [[https://www.linkedin.com/in/adrian-najera-4681ba128/][Adrian Najera]], who built the working prototype that the system rests on. The project sits under Operand, the company we are building, and the name was easy to choose. Hebbian reads the brain directory continuously and builds a graph of semantic connections between every note in it. The connections strengthen as I use them and decay as I do not. Over years, the most useful associations emerge from the access patterns themselves, without my having to curate them by hand. What started as my own private notes becomes, over time, a kind of memory that knows itself.
+
+The Hebbian layer is also accessible to other agents, not only to me. When I am working on a problem and an AI assistant is helping me think, that assistant can query my own memory layer for what I have written before on related topics. Not by reading my whole brain directory, which would be too slow and too noisy, but by asking Hebbian for the strongest connections to the current context. My past thinking becomes active context for my present thinking, surfaced by a system that knows my memory better than I do.
+
+This is where the loop closes. The blue notebook captures the thinking. The bigger notebook formalizes the thinking. The brain directory archives the thinking. Hebbian remembers the thinking on my behalf and surfaces it back to me when it is relevant. I have offloaded none of the cognition. I have only offloaded the parts of memory that human memory was never very good at: storage, recall by relevance, the slow accumulation of associative weight.
+
+There is a temptation, when people describe systems like this, to frame them as productivity advice. As if the point is to write more notes, learn faster, ship more output. That framing misses what is actually at stake.
+
+The reason I built this system is that the alternative was watching my own thinking become indistinguishable from the output of a model that had never thought about anything. When you let a machine write your summaries, you stop being someone who can read carefully. When you let a machine outline your essays, you stop being someone who can structure an argument. When you let a machine answer your questions, you stop being someone who can sit with a question long enough for the answer to mean something.
+
+The thing the dominant AI workflow erodes is not your productivity. It is the practice of being a person who thinks. That practice is built one notebook page at a time, one wrong proof at a time, one quiet hour at a time, and it is the only thing about you that cannot be replicated by a model. To outsource it is to volunteer for irrelevance.
+
+The four-layer system is a refusal of that bargain. It accepts every gift the machines have to offer, which is many, and refuses the one demand they tend to make in return.
+
+Tonight I will sit down with the blue notebook, work for ninety minutes on whatever piece of mathematics is in front of me, and probably get about three lines into a proof before realizing I do not yet understand what I am trying to prove. That is normal. That is the work. The notebook will absorb the wrong attempts and I will go to bed.
+
+In a few weeks the proof will be ready for the bigger notebook. In a few months the cluster of related proofs will be ready for the brain directory. In a few years the brain directory will have grown large enough that Hebbian can begin doing what it is meant to do, which is surfacing the patterns I am too close to see.
+
+Until then. Three notebooks and a directory, and the slow practice of being a person who thinks.
