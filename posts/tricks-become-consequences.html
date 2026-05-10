@@ -221,69 +221,315 @@
 <header class="essay-head">
   <div class="eyebrow"><span class="bar"></span><span class="cat">essay</span><span>&middot; f.005r</span></div>
   <h1>Tricks become <i>consequences</i></h1>
-  <p class="dek">A small algorithm, a three-hundred-year-old theorem, and what changes when you see one inside the other.</p>
+  <p class="dek">Most algorithms taught as standalone tricks are corollaries of small math identities. A worked example with prefix sums, the discrete identity that produces it, and a map from six pieces of math to the algorithms they generate.</p>
   <div class="essay-meta">
     <div class="group"><span class="k">Filed</span><span class="v">2026-05-09</span></div>
-    <div class="group"><span class="k">Read</span><span class="v">4 min</span></div>
+    <div class="group"><span class="k">Read</span><span class="v">12 min</span></div>
     <div class="group tags"><span class="tag">math</span><span class="tag">algorithms</span><span class="tag">learning</span><span class="tag">craft</span></div>
   </div>
 </header>
 <div class="essay-body">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3b48390">1. The prefix sum, taught from zero</a></li>
+<li><a href="#orgc5bd148">2. The identity underneath</a></li>
+<li><a href="#org23a4d46">3. What changes when you see this</a></li>
+<li><a href="#org0654757">4. A second worked example: sliding window</a></li>
+<li><a href="#orge24630e">5. What happens when the catalog breaks</a></li>
+<li><a href="#org747aa10">6. A map of math to algorithms</a></li>
+<li><a href="#org88c941a">7. Catalog and identity, honestly</a></li>
+<li><a href="#org697aa7f">8. Why most engineers stop at the catalog</a></li>
+<li><a href="#orgb625441">9. The transfer argument, with its condition</a></li>
+<li><a href="#orgeb8c723">10. Closing</a></li>
+</ul>
+</div>
+</div>
 <p>
-Working through prefix sums on a Tuesday afternoon, you notice something. The algorithm is small. Build an array of running totals from a list of numbers. Subtract any two of those totals to get the sum of every number between them. Three lines of code. The kind of thing you can teach in an afternoon and use for a decade.
+There is an algorithm that comes up in almost every interview problem set, in compilers, in databases, in computer graphics, and in any code that does aggregate analytics. It is so common it is rarely taught with care; it is just one of those things you pick up. I want to use it as a starting point, because once you look at it closely, an entire class of <i>tricks</i> in the algorithmic catalog stops being tricks and becomes the visible consequence of a piece of math you already know.
 </p>
 
 <p>
-You have used it for years. It sits in the catalog along with sliding window, two pointers, monotonic stack, union-find. A pattern you recognize on sight, apply without thinking, and move on.
+The algorithm is the prefix sum.
+</p>
+
+<div id="outline-container-org3b48390" class="outline-2">
+<h2 id="org3b48390"><span class="section-number-2">1.</span> The prefix sum, taught from zero</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Suppose you are given a list of numbers and a stream of queries, each of the form "what is the sum of the elements between index <code>a</code> and index <code>b</code>?". A direct implementation walks from <code>a</code> to <code>b</code> and adds them up. If the list has length <code>n</code> and you receive <code>q</code> queries, that costs you <code>O(n*q)</code> total work. For <code>n = q = 10^5</code>, that is ten billion operations, which is too slow for an interactive system.
 </p>
 
 <p>
-Then someone walks you through the math.
+There is a better way. Before any queries arrive, walk the list once and build a second array of <i>running totals</i>. Concretely, given:
+</p>
+
+<pre class="example">
+input:  [3, 1, 4, 1, 5, 9, 2, 6]
+indices: 0  1  2  3  4  5  6  7
+</pre>
+
+<p>
+build:
+</p>
+
+<pre class="example">
+prefix[0] = 3
+prefix[1] = 3 + 1            =  4
+prefix[2] = 3 + 1 + 4         =  8
+prefix[3] = 3 + 1 + 4 + 1     =  9
+prefix[4] = 3 + 1 + 4 + 1 + 5 = 14
+prefix[5] =                    23
+prefix[6] =                    25
+prefix[7] =                    31
+</pre>
+
+<p>
+That is one linear pass. After it, every range query is one subtraction. The sum of indices <code>2</code> through <code>5</code> inclusive is
+</p>
+
+<pre class="example">
+prefix[5] − prefix[1] = 23 − 4 = 19
+</pre>
+
+<p>
+You can verify by hand: <code>4 + 1 + 5 + 9 = 19</code>. Each query now costs <code>O(1)</code> instead of <code>O(n)</code>, and the total work drops from <code>O(n*q)</code> to <code>O(n + q)</code>.
 </p>
 
 <p>
-The running total has a name. It is called an accumulator. The subtraction has a name. It is the fundamental theorem of calculus, in its discrete form. Subtract two accumulators and you get the contribution of everything in between them. The continuous version of this identity is famous. Newton and Leibniz formulated it in the 1600s. The discrete version is the same identity rewritten for sequences instead of for functions of a real variable. You have been implementing a corollary of it on Mondays without knowing.
+This is the prefix sum. Three lines of code: one loop to build the array, one subtraction per query, and a small adjustment for the off-by-one on the lower endpoint. If you have done any competitive programming or interview prep, you have used it many times. It sits in your toolkit alongside sliding window, two pointers, monotonic stack, and union-find.
 </p>
 
 <p>
-Something changes.
+So far, this is exactly how the algorithm is usually taught. You learn the recipe, you learn when it applies, you move on. What I want to do now is open it up.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc5bd148" class="outline-2">
+<h2 id="orgc5bd148"><span class="section-number-2">2.</span> The identity underneath</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Define <code>s_i = a_0 + a_1 + ... + a_i</code>. The <code>s_i</code> is called a <i>partial sum</i>, and the array we built above is the sequence of partial sums of the input. The query above can be written:
+</p>
+
+<pre class="example">
+sum from index a+1 to b of a_i  =  s_b − s_a
+</pre>
+
+<p>
+That is the rule we used. But why does it work? Look at what <code>s_b − s_a</code> becomes when you write it as a chain of one-step differences:
+</p>
+
+<pre class="example">
+s_b − s_a  =  (s_b − s_{b-1})
+            + (s_{b-1} − s_{b-2})
+            + ...
+            + (s_{a+1} − s_a)
+</pre>
+
+<p>
+Every internal term cancels with its neighbor. <code>s_{b-1}</code> appears once with a plus sign and once with a minus, and they kill each other. The only survivors are the very first <code>s_b</code> and the very last <code>−s_a</code>. This pattern of mutual annihilation is called the <i>telescoping sum identity</i>, named after a collapsible telescope: a chain of segments folds down into the difference of the two ends.
 </p>
 
 <p>
-The procedure is the same. The code is the same. But the <i>feel</i> of it is different now. You are no longer remembering a trick. You are watching a consequence unfold from an identity that does not need to be memorized because it is true.
+Now look at one of those one-step differences in isolation: <code>s_{i+1} − s_i</code>. By the way we built the partial sums, that difference equals <code>a_{i+1}</code>. The <i>difference operator</i> on the partial-sum array recovers the original list. So when you sum the differences from <code>a</code> to <code>b−1</code>, you are recovering <code>a_{a+1} + a_{a+2} + ... + a_b</code>, which is exactly the range we wanted.
 </p>
 
 <p>
-This is the small distinction worth writing about.
+In one move, we have established three things:
+</p>
+
+<ol class="org-ol">
+<li>The partial sum <code>s</code> acts as an antiderivative of the input <code>a</code>: applying the difference operator to <code>s</code> recovers <code>a</code>.</li>
+<li>Telescoping says: summing the differences of an antiderivative across an interval gives the difference of the antiderivative at the endpoints.</li>
+<li>Therefore, <code>s_b − s_a</code> is the sum of <code>a</code> over the interval (a, b].</li>
+</ol>
+
+<p>
+If that pattern looks familiar, it should. The continuous version reads:
+</p>
+
+<pre class="example">
+integral from a to b of f'(x) dx  =  f(b) − f(a)
+</pre>
+
+<p>
+This is the <i>fundamental theorem of calculus</i>, written down in its modern form by Newton and Leibniz in the 1600s, and the central identity of every first-year calculus course. The discrete version is the same statement on integer-indexed sequences. Replace the integral with a sum, replace the derivative with a one-step difference, replace the antiderivative with a partial sum, and the identity is unchanged.
 </p>
 
 <p>
-Algorithms without the math underneath feel like a catalog of clever tricks you have to memorize. Algorithms with the math underneath feel like consequences.
+Graham, Knuth, and Patashnik dedicate a chapter of <i>Concrete Mathematics</i> to this and call it <i>finite calculus</i>. It is not a metaphor. The same algebraic structure runs in both worlds; only the index set changes from the real numbers to the integers.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org23a4d46" class="outline-2">
+<h2 id="org23a4d46"><span class="section-number-2">3.</span> What changes when you see this</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The procedure has not changed. The code has not changed. But the algorithm sits differently in your head. You are no longer pattern-matching on a recipe. You are watching a small, named identity unfold: telescoping. The recipe is what telescoping looks like at the level of an <code>O(n)</code> preprocessing pass and an <code>O(1)</code> query.
 </p>
 
 <p>
-The two postures produce the same code on a problem you have seen before. They diverge on a problem you have not. The catalog person reaches for the nearest matching template. The consequence person reaches for the underlying identity and re-derives whatever the problem requires. The catalog person is faster on familiar ground. The consequence person is the only one who survives unfamiliar ground.
+This is the move worth naming. A pattern memorized as a recipe must be re-encoded for every variation. A pattern derived from an identity <i>deforms with the problem</i>. To see what that means concretely, change the problem.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0654757" class="outline-2">
+<h2 id="org0654757"><span class="section-number-2">4.</span> A second worked example: sliding window</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The classic <i>fixed-size sliding window</i> problem says: given a list of numbers and a window size <code>k</code>, return the sum of every contiguous window of length <code>k</code>. With our list and <code>k = 3</code>:
+</p>
+
+<pre class="example">
+windows of size 3 in [3, 1, 4, 1, 5, 9, 2, 6]:
+[3,1,4]   sum 8
+[1,4,1]   sum 6
+[4,1,5]   sum 10
+[1,5,9]   sum 15
+[5,9,2]   sum 16
+[9,2,6]   sum 17
+</pre>
+
+<p>
+The standard "sliding window" template is: keep a running sum, add the entering element, subtract the exiting element. That works, costs <code>O(n)</code>, and is taught as its own pattern.
 </p>
 
 <p>
-Most engineers settle for the catalog because the catalog is what gets measured. Each algorithm solved is a unit of progress that can be counted and posted. Reading the proof of the master theorem produces no countable artifact. So the math hour does not happen, and the catalog grows, and one day you are five years into a career with a thousand patterns memorized and no conviction underneath any of them.
+But notice: the sum of any window of length <code>k</code> starting at index <code>i</code> is exactly <code>prefix[i + k − 1] − prefix[i − 1]</code>. Iterating that over <code>i</code> <i>is</i> the sliding window. The two templates are not two algorithms; they are two ways of writing the same identity. Sliding window is <i>just</i> the difference of two partial sums, computed incrementally. Once you see prefix sums as discrete antiderivatives, sliding window stops being a separate item in the catalog.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge24630e" class="outline-2">
+<h2 id="orge24630e"><span class="section-number-2">5.</span> What happens when the catalog breaks</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Now change the problem in a way that should be small but isn't. Instead of the <i>sum</i> over a range, return the <i>maximum</i> over a range. Same input, same query interface; only the operator changes.
 </p>
 
 <p>
-The math underneath is small. A dozen identities, well understood, generate most of the algorithms a working engineer will meet. Calculus gives you accumulators and differences, which give you prefix sums and sliding windows and gradient descent. Probability gives you concentration, which gives you hashing and Bloom filters and randomized algorithms. Information theory gives you bit counting, which gives you sorting bounds and compression. Recurrences give you dynamic programming and divide-and-conquer in the same breath. You stop having to remember the algorithms. You remember the identities and the algorithms fall out as needed.
+The prefix-sum template does not survive this change. There is no <code>prefix_max</code> structure such that <code>prefix_max[b] − prefix_max[a]</code> gives the max on <code>(a, b]</code>. The reason is algebraic: subtraction is the inverse of addition because the integers under addition form a <i>group</i> (every element has an inverse). The integers under maximum do not form a group; max has no inverse. There is no operation you can apply to two endpoint values to undo the contributions of the elements between them.
 </p>
 
 <p>
-The investment also transfers. The same calculus that explains prefix sums explains backpropagation. The same probability that explains hashing explains why your retrieval system works. One hour of math pays for ten hours of algorithm work, in this domain and in the next one.
+Two postures diverge here.
 </p>
 
 <p>
-The reason the prefix-sum example sticks is that it is so small. Three lines of code. A single subtraction. And underneath it, a theorem that took calculus a century to formalize and that gets taught to first-year undergraduates by the second semester. If a thing this small contains a thing this large, every algorithm in the catalog is hiding something.
+The <i>catalog</i> engineer reaches for the next template. "Range max queries; that sounds like segment tree." If the template happens to fit, they ship; if not, they thrash.
+</p>
+
+<p>
+The <i>identity</i> engineer asks a different question: what algebraic structure does <code>max</code> have, and what data structure handles a query reduced over that structure? Answer: <code>max</code> is associative and idempotent, which puts it in a class of operations called <i>commutative idempotent monoids</i>. For idempotent monoids, the right structure is the <i>sparse table</i> (<code>O(n log n)</code> preprocessing, <code>O(1)</code> query). For non-idempotent monoids, you fall back to the <i>segment tree</i> (<code>O(n)</code> preprocessing, <code>O(log n)</code> query). The algorithm becomes inevitable; you derive it instead of remembering it.
+</p>
+
+<p>
+This is what "deforms with the problem" means in practice. The catalog gives you a fixed list of templates and panics when the input does not fit. The identity gives you a small set of underlying objects (groups, monoids, fields, partial orders) and a way to derive the right algorithm for whichever object the problem lives in.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org747aa10" class="outline-2">
+<h2 id="org747aa10"><span class="section-number-2">6.</span> A map of math to algorithms</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The math underneath is small. Six broad areas, each with one or two load-bearing identities, generate a large fraction of the algorithms a working engineer meets. Here is the map, with one named algorithm and a one-line sketch of how the math produces it.
+</p>
+
+<p>
+<b>Discrete calculus.</b> Telescoping, summation by parts, the FTC for sequences. Prefix sums fall out of the FTC; sliding windows are differences of prefix sums; difference arrays invert the operation (great for batch range updates); <i>gradient descent</i> is the continuous limit of the same accumulator pattern.
+</p>
+
+<p>
+<b>Recurrence solving.</b> Master theorem, generating functions, linear-recurrence machinery. <i>Merge sort</i> has running time <code>T(n) = 2 T(n/2) + O(n)</code>, which the master theorem solves to <code>O(n log n)</code> directly; every dynamic-programming algorithm is the <i>iterative reading</i> of a recurrence relation; matrix exponentiation reduces order-<code>k</code> linear recurrences to <code>O(log n)</code> matrix multiplications.
+</p>
+
+<p>
+<b>Amortized analysis.</b> Aggregate, accounting, and potential methods. A <i>dynamic array</i> is <code>O(1)</code> per push not because any single push is fast (occasional resizes are <code>O(n)</code>), but because the rare expensive operations are paid for in advance by a charge of one per cheap one; this is the accounting method made rigorous. <i>Union-find with path compression</i> has near-constant amortized cost per operation (inverse Ackermann) by the same machinery; <i>monotonic stacks</i> are <code>O(n)</code> total because each element is pushed and popped at most once across the whole run.
+</p>
+
+<p>
+<b>Concentration of measure.</b> Markov, Chebyshev, Hoeffding, Chernoff. A <i>hash table</i> is <code>O(1)</code> expected per operation because keys are spread uniformly, so the load on any bucket is tightly concentrated near the mean; the Chernoff bound makes "with high probability" precise. <i>Bloom filters</i>, <i>count-min sketches</i>, <i>reservoir sampling</i>, and <i>randomized quicksort</i> all rely on the same family of bounds.
+</p>
+
+<p>
+<b>Information theory.</b> Shannon entropy, source coding. The <i>comparison-sort lower bound</i> of <code>Ω(n log n)</code> is a counting argument: there are <code>n!</code> permutations, each comparison gives one bit, so any decision tree of comparison-sorts has depth at least <code>log_2(n!) ≈ n log n</code>. The same entropy bookkeeping gives <i>Huffman coding</i>, <i>arithmetic coding</i>, and the analyses of <i>locality-sensitive hashing</i>.
+</p>
+
+<p>
+<b>Order theory and invariants.</b> Partial orders, monotone sequences, loop invariants. <i>Breadth-first search</i> visits vertices in order of distance from the source; the loop invariant says: when you first reach a vertex, you have reached it via a shortest path. <i>Topological sort</i> extends this to directed acyclic graphs; <i>Dijkstra's algorithm</i> generalizes to weighted graphs by replacing the FIFO queue with a priority queue; <i>two pointers</i> on a sorted array works because the answer for any earlier left endpoint cannot improve over the current one, and the proof is one inequality.
+</p>
+
+<p>
+<b>Linear algebra.</b> Eigenvectors, matrix-vector views, spectral decomposition. <i>PageRank</i> ranks pages by the principal eigenvector of the link-transition matrix; <i>spectral clustering</i> does the same for the graph Laplacian; <i>singular value decomposition</i> underwrites every dimensionality-reduction technique you have heard of; the <i>attention</i> operator in modern transformers is a normalized dot product, which is the most basic linear-algebra primitive there is.
+</p>
+
+<p>
+Six areas. A working engineer can hold six things in mind. Each one collapses dozens of catalogued algorithms into a single pattern of derivation.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org88c941a" class="outline-2">
+<h2 id="org88c941a"><span class="section-number-2">7.</span> Catalog and identity, honestly</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+The catalog and the identity are not opposites; they compose. Pattern recognition is fast: on a familiar problem, the catalog wins, because rederiving an algorithm you have already memorized wastes minutes you do not have. The catalog is not a moral failing.
+</p>
+
+<p>
+But the catalog without the identity is brittle. The first time the problem has a twist your template did not anticipate (range <i>max</i> instead of range <i>sum</i>, weighted edges instead of unweighted, online instead of offline, an additional constraint that breaks the obvious recursion), you stall. The math investment buys you the deformation: you can rederive the algorithm for a problem you have not seen, because the identity is more general than any of its corollaries. A working engineer does both. Recognize the shape, then pull on the identity to bend the template to fit.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org697aa7f" class="outline-2">
+<h2 id="org697aa7f"><span class="section-number-2">8.</span> Why most engineers stop at the catalog</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+There is a sociological reason most engineers stop at the catalog, and it is worth naming.
+</p>
+
+<p>
+The catalog is <i>countable</i>. Every algorithm solved is a unit of progress that can be posted: a green dot on a LeetCode profile, a commit in a study repository, a pattern named on a CV. Reading the proof of the master theorem produces no countable artifact. Working through the proof of the comparison-sort lower bound produces no countable artifact. Sitting with <i>Concrete Mathematics</i> for an hour and rederiving the discrete FTC produces no countable artifact.
+</p>
+
+<p>
+So the math hour is the hour that gets postponed. The catalog grows. After five years you have a thousand patterns memorized and no conviction underneath any of them. The first hard novel problem reveals it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb625441" class="outline-2">
+<h2 id="orgb625441"><span class="section-number-2">9.</span> The transfer argument, with its condition</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+There is a stronger version of the case: the math underneath transfers across domains. The same calculus that explains prefix sums explains <i>backpropagation</i> in neural networks (chain rule plus FTC for partial derivatives). The same probability that explains hashing explains why <i>retrieval-augmented generation</i> works (high-dimensional unit vectors are nearly orthogonal in expectation, so semantically related vectors stand out from unrelated ones). One hour spent on the math underneath one algorithm pays for itself across many.
+</p>
+
+<p>
+The condition is important: this transfer happens only when the math hour is <i>coupled</i> to a problem in the same sitting. Math read in isolation, without an algorithm to derive or a problem to solve, becomes inert knowledge: present in memory, absent at the keyboard. The pairing is the whole point. Read the chapter, then apply the chapter's identity to the algorithm you are working on this week. If you cannot find one, the chapter was the wrong chapter to read this week.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeb8c723" class="outline-2">
+<h2 id="orgeb8c723"><span class="section-number-2">10.</span> Closing</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+The reason the prefix-sum example sticks is that it is so small. Three lines of code; a single subtraction. Underneath it, a theorem that took seventeenth-century mathematics to formalize and that is now taught to first-year undergraduates by the second semester. If a thing this small contains a thing this large, every algorithm in the catalog is hiding something.
 </p>
 
 <p>
 Most of them are. The work of an engineering career is finding out what.
 </p>
+</div>
+</div>
 
 </div>
 <div class="endmark"></div>
