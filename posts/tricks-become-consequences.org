@@ -1,0 +1,36 @@
+#+TITLE:     Tricks become /consequences/
+#+DATE:      2026-05-09
+#+CATEGORY:  essay
+#+TAGS:      math algorithms learning craft
+#+READ_TIME: 4
+#+FOLIO:     f.005r
+#+DEK:       A small algorithm, a three-hundred-year-old theorem, and what changes when you see one inside the other.
+#+FEATURED:  t
+
+Working through prefix sums on a Tuesday afternoon, you notice something. The algorithm is small. Build an array of running totals from a list of numbers. Subtract any two of those totals to get the sum of every number between them. Three lines of code. The kind of thing you can teach in an afternoon and use for a decade.
+
+You have used it for years. It sits in the catalog along with sliding window, two pointers, monotonic stack, union-find. A pattern you recognize on sight, apply without thinking, and move on.
+
+Then someone walks you through the math.
+
+The running total has a name. It is called an accumulator. The subtraction has a name. It is the fundamental theorem of calculus, in its discrete form. Subtract two accumulators and you get the contribution of everything in between them. The continuous version of this identity is famous. Newton and Leibniz formulated it in the 1600s. The discrete version is the same identity rewritten for sequences instead of for functions of a real variable. You have been implementing a corollary of it on Mondays without knowing.
+
+Something changes.
+
+The procedure is the same. The code is the same. But the /feel/ of it is different now. You are no longer remembering a trick. You are watching a consequence unfold from an identity that does not need to be memorized because it is true.
+
+This is the small distinction worth writing about.
+
+Algorithms without the math underneath feel like a catalog of clever tricks you have to memorize. Algorithms with the math underneath feel like consequences.
+
+The two postures produce the same code on a problem you have seen before. They diverge on a problem you have not. The catalog person reaches for the nearest matching template. The consequence person reaches for the underlying identity and re-derives whatever the problem requires. The catalog person is faster on familiar ground. The consequence person is the only one who survives unfamiliar ground.
+
+Most engineers settle for the catalog because the catalog is what gets measured. Each algorithm solved is a unit of progress that can be counted and posted. Reading the proof of the master theorem produces no countable artifact. So the math hour does not happen, and the catalog grows, and one day you are five years into a career with a thousand patterns memorized and no conviction underneath any of them.
+
+The math underneath is small. A dozen identities, well understood, generate most of the algorithms a working engineer will meet. Calculus gives you accumulators and differences, which give you prefix sums and sliding windows and gradient descent. Probability gives you concentration, which gives you hashing and Bloom filters and randomized algorithms. Information theory gives you bit counting, which gives you sorting bounds and compression. Recurrences give you dynamic programming and divide-and-conquer in the same breath. You stop having to remember the algorithms. You remember the identities and the algorithms fall out as needed.
+
+The investment also transfers. The same calculus that explains prefix sums explains backpropagation. The same probability that explains hashing explains why your retrieval system works. One hour of math pays for ten hours of algorithm work, in this domain and in the next one.
+
+The reason the prefix-sum example sticks is that it is so small. Three lines of code. A single subtraction. And underneath it, a theorem that took calculus a century to formalize and that gets taught to first-year undergraduates by the second semester. If a thing this small contains a thing this large, every algorithm in the catalog is hiding something.
+
+Most of them are. The work of an engineering career is finding out what.
