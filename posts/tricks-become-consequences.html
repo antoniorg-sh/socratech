@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Socratech &middot; An agent is mostly infrastructure</title>
+<title>Socratech &middot; Tricks become <i>consequences</i></title>
 <link rel="icon" href="../assets/socratech.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -213,195 +213,77 @@
   <!-- FOLIO RAIL -->
   <div class="rail">
     <a href="../blog.html" class="back">Back to the Ledger</a>
-    <span>FOL. <span class="folio">f.001r</span></span>
+    <span>FOL. <span class="folio">f.005r</span></span>
   </div>
 
 <main>
 <article>
 <header class="essay-head">
-  <div class="eyebrow"><span class="bar"></span><span class="cat">essay</span><span>&middot; f.001r</span></div>
-  <h1>An agent is mostly infrastructure</h1>
-  <p class="dek">An agent looks, from the outside, like a conversation with a model. From the inside it is mostly plumbing. This is a note on the part that is plumbing, and on what I am building to make it less tedious.</p>
+  <div class="eyebrow"><span class="bar"></span><span class="cat">essay</span><span>&middot; f.005r</span></div>
+  <h1>Tricks become <i>consequences</i></h1>
+  <p class="dek">A small algorithm, a three-hundred-year-old theorem, and what changes when you see one inside the other.</p>
   <div class="essay-meta">
-    <div class="group"><span class="k">Filed</span><span class="v">2026-04-19</span></div>
-    <div class="group"><span class="k">Read</span><span class="v">9 min</span></div>
-    <div class="group tags"><span class="tag">mcp</span><span class="tag">agents</span><span class="tag">tools</span><span class="tag">operand</span></div>
+    <div class="group"><span class="k">Filed</span><span class="v">2026-05-09</span></div>
+    <div class="group"><span class="k">Read</span><span class="v">4 min</span></div>
+    <div class="group tags"><span class="tag">math</span><span class="tag">algorithms</span><span class="tag">learning</span><span class="tag">craft</span></div>
   </div>
 </header>
 <div class="essay-body">
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#org64c2a9d">1. The shape of the current problem</a></li>
-<li><a href="#orge4e0a56">2. What I am building</a></li>
-<li><a href="#org49c9ea9">3. Tools calling tools</a></li>
-<li><a href="#org0376991">4. The philosophical bit</a></li>
-<li><a href="#orgd41a644">5. What this is for</a></li>
-</ul>
-</div>
-</div>
 <p>
-An agent, on the outside, is a conversation with a model. You ask it
-to do something, it thinks aloud, it returns a result. This is the
-part that sells.
+Working through prefix sums on a Tuesday afternoon, you notice something. The algorithm is small. Build an array of running totals from a list of numbers. Subtract any two of those totals to get the sum of every number between them. Three lines of code. The kind of thing you can teach in an afternoon and use for a decade.
 </p>
 
 <p>
-Inside, an agent is mostly plumbing. The model calls tools. The tools
-run somewhere. Their outputs come back. The model decides what to do
-next. Some of those tools call other tools. Somewhere there is memory
-of what has happened so far. Most of the work of an agent, in the
-engineering sense, is the work of the plumbing that holds all of this
-together.
+You have used it for years. It sits in the catalog along with sliding window, two pointers, monotonic stack, union-find. A pattern you recognize on sight, apply without thinking, and move on.
 </p>
 
 <p>
-This is the part I keep thinking about.
-</p>
-
-<div id="outline-container-org64c2a9d" class="outline-2">
-<h2 id="org64c2a9d"><span class="section-number-2">1.</span> The shape of the current problem</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-MCP, the Model Context Protocol, is a standard way for a tool to
-describe itself to a model, and for a model to call it. A Python tool
-ships with a Python server that speaks MCP. A Node tool ships with a
-Node server. A Go tool ships with a Go server. Each of those servers
-is a process with its own port, its own auth, its own deployment, its
-own scaling config.
+Then someone walks you through the math.
 </p>
 
 <p>
-Fifty tools across an enterprise is, in effect, fifty small services,
-each needing its own care and feeding. That is a lot of ceremony for
-something whose user-facing surface is a few short function
-signatures.
+The running total has a name. It is called an accumulator. The subtraction has a name. It is the fundamental theorem of calculus, in its discrete form. Subtract two accumulators and you get the contribution of everything in between them. The continuous version of this identity is famous. Newton and Leibniz formulated it in the 1600s. The discrete version is the same identity rewritten for sequences instead of for functions of a real variable. You have been implementing a corollary of it on Mondays without knowing.
 </p>
 
 <p>
-The awkwardness is structural. MCP speaks over stdio or HTTP between
-an agent and a tool server, and the server implementation is
-per-language. So the unit of deployment ends up being per-language,
-and everyone ends up running a matrix of servers. The servers are
-never the interesting part of the work. The tools are. The servers
-are tax.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orge4e0a56" class="outline-2">
-<h2 id="orge4e0a56"><span class="section-number-2">2.</span> What I am building</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-MCP Compose is a single Go binary that spawns tools as child
-processes in any language and speaks MCP on their behalf. Python
-tools run as Python processes. Node tools run as Node processes. The
-orchestrator runs as one process. Communication between the
-orchestrator and its children happens over stdio pipes, not network
-sockets.
+Something changes.
 </p>
 
 <p>
-The effects compound. Cold starts are milliseconds rather than
-seconds, because spawning a subprocess is cheaper than spinning up a
-container. Authentication becomes one layer rather than fifty.
-Scaling happens at the process level, which is a finer grain than the
-container level. For a developer with ten tools in three languages,
-the mental model collapses from "ten small services" to "one process
-tree."
+The procedure is the same. The code is the same. But the <i>feel</i> of it is different now. You are no longer remembering a trick. You are watching a consequence unfold from an identity that does not need to be memorized because it is true.
 </p>
 
 <p>
-I keep returning to how different this is from how I learned backend
-engineering. The old instinct was to give every concern its own
-deployment. Each service was a sovereign citizen. Operand is the
-opposite instinct: one process at the root, and a colony of lightweight
-children under it, all speaking the same protocol outward.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org49c9ea9" class="outline-2">
-<h2 id="org49c9ea9"><span class="section-number-2">3.</span> Tools calling tools</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-Once you have an orchestrator, a small but consequential thing becomes
-possible. A tool can call another tool internally, without round-
-tripping through the model. The model calls one tool; behind it, a
-chain executes automatically. The contracts between tools carry their
-own versioning, their own schema hashes, their own semver constraints.
+This is the small distinction worth writing about.
 </p>
 
 <p>
-What this builds, if you squint, is a typed workflow engine for the
-agent era. Temporal and Airflow and Prefect do this for data
-pipelines, but none of them speaks MCP, and none is polyglot at the
-process level. The new thing here is that the unit is the tool, not
-the job, and the consumer is a model rather than a scheduler.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org0376991" class="outline-2">
-<h2 id="org0376991"><span class="section-number-2">4.</span> The philosophical bit</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-I have been thinking, lately, about what a <i>tool</i> actually is.
+Algorithms without the math underneath feel like a catalog of clever tricks you have to memorize. Algorithms with the math underneath feel like consequences.
 </p>
 
 <p>
-In a REST world, a tool is an endpoint: a verb plus a path plus a
-payload. In a gRPC world, it is a method on a service. In an MCP
-world, it is a function the model can call. These are not the same
-thing. An MCP tool is a contract with a model as its counterparty.
-The model is going to read your function's description and decide,
-on the fly, whether to call it. The prose of the schema matters as
-much as the types.
+The two postures produce the same code on a problem you have seen before. They diverge on a problem you have not. The catalog person reaches for the nearest matching template. The consequence person reaches for the underlying identity and re-derives whatever the problem requires. The catalog person is faster on familiar ground. The consequence person is the only one who survives unfamiliar ground.
 </p>
 
 <p>
-Which means writing good tools for agents is a new discipline. It is
-part API design, part technical writing, part behavioral engineering.
-The tools that end up useful are not the ones with the prettiest
-signatures; they are the ones the model actually reaches for,
-reliably, when asked to do something adjacent.
+Most engineers settle for the catalog because the catalog is what gets measured. Each algorithm solved is a unit of progress that can be counted and posted. Reading the proof of the master theorem produces no countable artifact. So the math hour does not happen, and the catalog grows, and one day you are five years into a career with a thousand patterns memorized and no conviction underneath any of them.
 </p>
 
 <p>
-This is the deepest reason I care about the infrastructure under
-agents. The way you write a tool shapes the agent that uses it. The
-way you host that tool shapes who can write it. The way you orchestrate
-tools shapes what an agent is capable of composing. Plumbing, in this
-sense, is not plumbing. It is the grammar of what a thinking machine
-can say.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgd41a644" class="outline-2">
-<h2 id="orgd41a644"><span class="section-number-2">5.</span> What this is for</h2>
-<div class="outline-text-2" id="text-5">
-<p>
-The immediate reason I am building MCP Compose is that I want to
-deploy my own agents' tools without operating a small platform team.
-The longer reason is that I think the agent era is going to need an
-infrastructure layer, and the current one is held together by tape.
+The math underneath is small. A dozen identities, well understood, generate most of the algorithms a working engineer will meet. Calculus gives you accumulators and differences, which give you prefix sums and sliding windows and gradient descent. Probability gives you concentration, which gives you hashing and Bloom filters and randomized algorithms. Information theory gives you bit counting, which gives you sorting bounds and compression. Recurrences give you dynamic programming and divide-and-conquer in the same breath. You stop having to remember the algorithms. You remember the identities and the algorithms fall out as needed.
 </p>
 
 <p>
-There is a world in which MCP becomes the default way services expose
-themselves to anything, not just to agents. In that world, whatever
-orchestrates MCP tools at the process level is quietly load-bearing.
-I want to find out whether that world is the one we're in. If it is,
-I want the thing that runs under it to be pleasant to use.
+The investment also transfers. The same calculus that explains prefix sums explains backpropagation. The same probability that explains hashing explains why your retrieval system works. One hour of math pays for ten hours of algorithm work, in this domain and in the next one.
 </p>
 
 <p>
-The terminal is open. Let's see what we can compile.
+The reason the prefix-sum example sticks is that it is so small. Three lines of code. A single subtraction. And underneath it, a theorem that took calculus a century to formalize and that gets taught to first-year undergraduates by the second semester. If a thing this small contains a thing this large, every algorithm in the catalog is hiding something.
 </p>
-</div>
-</div>
+
+<p>
+Most of them are. The work of an engineering career is finding out what.
+</p>
 
 </div>
 <div class="endmark"></div>
